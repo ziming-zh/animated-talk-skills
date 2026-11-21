@@ -7,7 +7,7 @@ The skill was written from making [How to use agents to build complex systems](h
 ## Install
 
 ```bash
-git clone git@github.com:ziming-zh/animated-talk.git ~/.claude/skills/animated-talk
+git clone https://github.com/ziming-zh/animated-talk-skills.git ~/.claude/skills/animated-talk
 ```
 
 Claude Code picks it up in new sessions. Ask it to turn a deck or an idea into an animated talk, or type `/animated-talk`.
