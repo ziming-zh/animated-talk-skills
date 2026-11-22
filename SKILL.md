@@ -186,7 +186,8 @@ Details are in `references/narration.md`.
   - Nothing that moves goes under the stage. Two moving things split attention.
 - **Music:** run `scripts/make_music.py`.
   - It is original, so there is no licensing question.
-  - It plays softly under autoplay only and dips while the voice speaks.
+  - It starts with the voice, under autoplay or when stepping by hand, and dips while the voice speaks.
+  - Check it with `scripts/levels.py`: it must still be heard under the voice on laptop speakers.
 
 ### 7. Review, then play the whole thing
 
@@ -259,3 +260,4 @@ Rewrite the Chinese; don't translate it. Keep terms an engineer reads as-is in E
 | `scripts/make_article.py` | Inserts an article JSON into a page |
 | `scripts/make_zh.py` | Builds the Chinese page from the English one |
 | `scripts/make_music.py` | Synthesizes the background loop |
+| `scripts/levels.py` | Checks that the music can be heard under the voice |

@@ -333,7 +333,7 @@ html.fs-lock,html.fs-lock body{overflow:hidden}
 <main>
   <section class="player" id="player" aria-label="TALK TITLE: an animated story">
     <nav class="rail" id="rail" aria-label="Scenes"></nav>
-    <div class="stage" id="stage" tabindex="0" role="button" aria-label="Next step" aria-describedby="narr">
+    <div class="stage" id="stage" tabindex="0" role="button" aria-label="Next sentence" aria-describedby="narr">
       <div class="tick" id="tick"></div>
       <div class="flash" id="flash" aria-hidden="true"><i></i><b></b></div>
       <div class="hint" id="hint">click to continue →</div>
@@ -346,15 +346,15 @@ html.fs-lock,html.fs-lock body{overflow:hidden}
         <p class="sr" id="narrFull" aria-live="polite"></p>
       </div>
       <div class="ctrl">
-        <button id="prev" type="button" aria-label="Previous step"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10.5 2.5 5 8l5.5 5.5-1.4 1.4L2.2 8l6.9-6.9z"/></svg></button>
+        <button id="prev" type="button" aria-label="Previous sentence"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10.5 2.5 5 8l5.5 5.5-1.4 1.4L2.2 8l6.9-6.9z"/></svg></button>
         <button id="play" type="button"><svg viewBox="0 0 16 16" aria-hidden="true" id="playIcon"><path d="M4 2.5v11l9.5-5.5z"/></svg><span id="playText">Play</span></button>
-        <button id="next" type="button" aria-label="Next step"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M5.5 2.5 11 8l-5.5 5.5 1.4 1.4L13.8 8 6.9 1.1z"/></svg></button>
+        <button id="next" type="button" aria-label="Next sentence"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M5.5 2.5 11 8l-5.5 5.5 1.4 1.4L13.8 8 6.9 1.1z"/></svg></button>
         <button id="snd" type="button" aria-label="Sound on" aria-pressed="true"><svg viewBox="0 0 16 16" aria-hidden="true" id="sndIcon"><path d="M1.5 5.8h3L8.8 2.3v11.4L4.5 10.2h-3z"/><path d="M11 5.3a3.8 3.8 0 0 1 0 5.4M12.9 3.4a6.5 6.5 0 0 1 0 9.2" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
         <button id="fs" type="button" aria-label="Full screen" aria-pressed="false"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 6V2h4M10 2h4v4M14 10v4h-4M6 14H2v-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
         <span class="count" id="count"></span>
       </div>
       <p class="rotate">Turn your phone sideways for a bigger stage. Swipe or tap to step.</p>
-      <p class="keys"><kbd>→</kbd> or click: next step &nbsp;·&nbsp; <kbd>←</kbd> back &nbsp;·&nbsp; <kbd>P</kbd> play or pause &nbsp;·&nbsp; <kbd>M</kbd> sound on or off &nbsp;·&nbsp; <kbd>C</kbd> subtitles on or off &nbsp;·&nbsp; <kbd>F</kbd> full screen</p>
+      <p class="keys"><kbd>→</kbd> or click: next sentence &nbsp;·&nbsp; <kbd>←</kbd> back &nbsp;·&nbsp; <kbd>P</kbd> play or pause &nbsp;·&nbsp; <kbd>M</kbd> sound on or off &nbsp;·&nbsp; <kbd>C</kbd> subtitles on or off &nbsp;·&nbsp; <kbd>F</kbd> full screen</p>
     </div>
   </section>
   <div class="after">
@@ -786,16 +786,19 @@ scene({
     ui();
     speak();
   }
-  function next() {
+  function nextStep() {
     const sc = SCENES[cur];
     if (step < sc.steps.length - 1) show(cur, step + 1, "step");
     else if (cur < SCENES.length - 1) show(cur + 1, 0, "fwd");
     else pause();
   }
-  function prev() {
+  function prevStep() {
     if (step > 0) show(cur, step - 1, "back");
     else if (cur > 0) show(cur - 1, SCENES[cur - 1].steps.length - 1, "back");
   }
+  // by hand, Next and Back go one sentence at a time through a step's clip, then on to the next step
+  function next() { if (!toLine(subAt + 1)) nextStep(); }
+  function prev() { if (!toLine(subAt - 1)) prevStep(); }
   function ui() {
     const sc = SCENES[cur];
     eyebrow.textContent = cur === 0 ? "An animated story" : ACTS[sc.act];
@@ -857,14 +860,78 @@ scene({
     subTimer = setTimeout(() => { if (!voiceDriving()) { showSub(subAt + 1); readOn(); } }, 700 + weight(subs[subAt]) * 62);
   }
   const voiceDriving = () => clipKey && clipKey === clipOf(cur, step) && !audio.paused && isFinite(audio.duration);
+  /* where each subtitle line starts in its clip: first a guess from the line's share of
+     the text, then, once the clip is decoded, the pause in the voice nearest each guess */
+  const cues = {};
+  function guessCues(ls, d) {
+    const W = ls.map(weight), total = W.reduce((a, b) => a + b, 0);
+    let sum = 0;
+    return W.map(w => { const t = sum / total * d; sum += w; return t; });
+  }
+  function findCues(key, text) {
+    const C = window.OfflineAudioContext || window.webkitOfflineAudioContext;
+    if (!C || key in cues) return;
+    cues[key] = null;
+    fetch(key).then(r => r.arrayBuffer())
+      .then(b => new Promise((ok, no) => new C(1, 1, 44100).decodeAudioData(b, ok, no)))
+      .then(buf => {
+        const x = buf.getChannelData(0), F = Math.round(buf.sampleRate / 100), n = Math.floor(x.length / F), d = buf.duration;
+        const e = new Float32Array(n);
+        let peak = 0;
+        for (let i = 0; i < n; i++) {
+          let s = 0;
+          for (let j = i * F; j < i * F + F; j++) s += x[j] * x[j];
+          e[i] = Math.sqrt(s / F); peak = Math.max(peak, e[i]);
+        }
+        const gaps = [];   // quiet stretches of at least 0.12 s, in seconds, not counting the silence at the end
+        for (let i = 0, g = -1; i <= n; i++) {
+          const q = i < n && e[i] < peak * 0.05;
+          if (q && g < 0) g = i;
+          if (!q && g >= 0) { if (i - g >= 12 && i / 100 < d - 0.15) gaps.push([g / 100, i / 100]); g = -1; }
+        }
+        // pick one pause per line break, in order: a long pause near its guess scores best, and
+        // a break with no pause near enough keeps its guess at a cost
+        const ls = lines(text), guess = guessCues(ls, d), k = ls.length - 1, m = gaps.length, near = Math.max(1.2, d * 0.12);
+        const NO = -1e9, sc = [], back = [];
+        for (let i = 0; i <= k; i++) { sc.push(new Array(m + 1).fill(NO)); back.push(new Array(m + 1).fill(null)); }
+        sc[0][0] = 0;   // sc[i][j]: the best score with breaks 1..i placed and gaps before j used up
+        for (let i = 1; i <= k; i++) for (let j = 0; j <= m; j++) {
+          if (sc[i - 1][j] === NO) continue;
+          if (sc[i - 1][j] - 0.6 > sc[i][j]) { sc[i][j] = sc[i - 1][j] - 0.6; back[i][j] = [j, -1]; }
+          for (let g = j; g < m; g++) {
+            const dist = Math.abs((gaps[g][0] + gaps[g][1]) / 2 - guess[i]);
+            if (dist >= near) continue;
+            const v = sc[i - 1][j] + gaps[g][1] - gaps[g][0] - 0.15 * dist;
+            if (v > sc[i][g + 1]) { sc[i][g + 1] = v; back[i][g + 1] = [j, g]; }
+          }
+        }
+        let j = 0;
+        for (let jj = 1; jj <= m; jj++) if (sc[k][jj] > sc[k][j]) j = jj;
+        const out = new Array(k + 1).fill(0);
+        for (let i = k; i > 0; i--) { const [pj, g] = back[i][j]; out[i] = g < 0 ? guess[i] : Math.max(gaps[g][0], gaps[g][1] - 0.08); j = pj; }
+        for (let i = 1; i <= k; i++) out[i] = Math.max(out[i], out[i - 1] + 0.2);
+        cues[key] = out;
+      }).catch(() => {});
+  }
+  const cueTimes = () => (cues[clipKey] && cues[clipKey].length === subs.length ? cues[clipKey] : guessCues(subs, audio.duration));
   audio.addEventListener("timeupdate", () => {
     if (!voiceDriving() || !subs.length) return;
     clearTimeout(subTimer);
-    const total = subs.reduce((a, t) => a + weight(t), 0), at = audio.currentTime / audio.duration * total;
-    let sum = 0, i = 0;
-    for (; i < subs.length - 1; i++) { sum += weight(subs[i]); if (at < sum) break; }
+    const c = cueTimes();
+    let i = 0;
+    while (i < c.length - 1 && audio.currentTime >= c[i + 1]) i++;
     showSub(i);
   });
+  // go to subtitle line i of this step, taking the voice with it; false when there is no such line
+  function toLine(i) {
+    if (i < 0 || i >= subs.length) return false;
+    const voice = voiced() && clipKey === clipOf(cur, step) && isFinite(audio.duration);
+    if (!voice && (voiced() || !subsOn)) return false;
+    showSub(i);
+    if (voice) { audio.currentTime = cueTimes()[i] + 0.01; if (audio.paused) audio.play().catch(() => {}); }
+    else readOn();
+    return true;
+  }
   function toggleSubs() {
     subsOn = !subsOn;
     narr.classList.toggle("off", !subsOn);
@@ -881,14 +948,16 @@ scene({
     const key = clipOf(cur, step);
     clipKey = key; voiceBad = false;
     audio.src = key;
+    findCues(key, SCENES[cur].steps[step]);
     const tok = ++said, p = audio.play();
     if (p && p.catch) p.catch(e => { if (tok === said && e.name !== "AbortError") { voiceBad = true; if (playing) arm(); } });
+    musicOn();
     const n = step < SCENES[cur].steps.length - 1 ? [cur, step + 1] : cur < SCENES.length - 1 ? [cur + 1, 0] : null;
-    if (n) ahead.src = clipOf(n[0], n[1]);
+    if (n) { ahead.src = clipOf(n[0], n[1]); findCues(clipOf(n[0], n[1]), SCENES[n[0]].steps[n[1]]); }
   }
   /* a longer breath between scenes than between steps */
   const gap = () => (step === SCENES[cur].steps.length - 1 ? 1300 : 650);
-  const advance = () => { if (last()) { pause(); return; } next(); arm(); };
+  const advance = () => { if (last()) { pause(); return; } nextStep(); arm(); };
   const tick = ms => { void tickBar.offsetWidth; tickBar.style.animation = `tick ${ms}ms linear forwards`; };
   audio.addEventListener("ended", () => {
     if (!playing || !voiced()) return;
@@ -926,16 +995,18 @@ scene({
   }
   function play() {
     if (last()) show(0, 0, "fwd");
-    else if (cur === 0 && step === 0 && !voiceOn) next();
+    else if (cur === 0 && step === 0 && !voiceOn) nextStep();
     else if (voiceOn && clipKey === clipOf(cur, step) && !audio.ended && audio.currentTime > 0) { if (audio.paused) audio.play().catch(() => {}); }
     else speak();
     playing = true; setPlayUI(); arm(); seen(); musicOn();
   }
   function pause() { playing = false; clearTimeout(timer); tickBar.style.animation = "none"; audio.pause(); musicOff(last() ? 3 : 1); setPlayUI(); }
 
-  /* background music: a seamless loop under autoplay, dipped while the voice speaks */
-  const MUS = 0.15, DUCK = 0.06;
-  let actx = null, mgain = null, msrc = null, mbuf = null, mload = null;
+  /* background music: a seamless loop that starts with the voice, whether the talk
+     plays itself or is stepped by hand, and dips while the voice speaks. Stepped by
+     hand, it fades out a while after the last clip ends. */
+  const MUS = 0.2, DUCK = 0.1, IDLE = 9000;
+  let actx = null, mgain = null, msrc = null, mbuf = null, mload = null, mwant = false, midle = 0;
   function fade(v, sec) {
     const t = actx.currentTime;
     mgain.gain.cancelScheduledValues(t);
@@ -944,6 +1015,7 @@ scene({
   }
   async function musicOn() {
     if (!voiceOn) return;
+    mwant = true; clearTimeout(midle);
     if (!actx) {
       const C = window.AudioContext || window.webkitAudioContext;
       if (!C) return;
@@ -954,14 +1026,16 @@ scene({
       mload = mload || fetch("music.m4a").then(r => r.arrayBuffer())
         .then(b => new Promise((ok, no) => actx.decodeAudioData(b, ok, no))).then(b => { mbuf = b; }).catch(() => {});
       await mload;
-      if (!mbuf || !playing || !voiceOn) return;
+      if (!mbuf || !mwant || !voiceOn) return;
     }
     if (!msrc) { msrc = actx.createBufferSource(); msrc.buffer = mbuf; msrc.loop = true; msrc.connect(mgain); msrc.start(); }
     fade(audio.paused ? MUS : DUCK, 1.6);
   }
-  function musicOff(sec) { if (actx) fade(0, sec); }
-  audio.addEventListener("play", () => { if (playing && msrc) fade(DUCK, 0.35); });
-  audio.addEventListener("ended", () => { if (playing && msrc) fade(MUS, 0.9); });
+  function musicOff(sec) { mwant = false; clearTimeout(midle); if (actx) fade(0, sec); }
+  const musicIdle = () => { if (!playing) { clearTimeout(midle); midle = setTimeout(() => musicOff(3), IDLE); } };
+  audio.addEventListener("play", () => { if (mwant && msrc) fade(DUCK, 0.35); });
+  audio.addEventListener("ended", () => { if (mwant && msrc) { fade(MUS, 0.9); musicIdle(); } });
+  audio.addEventListener("error", () => { if (mwant) musicIdle(); });
   function setSndUI() {
     sndIcon.innerHTML = voiceOn ? SND_ON : SND_OFF;
     btnSnd.setAttribute("aria-pressed", voiceOn ? "true" : "false");

@@ -38,8 +38,8 @@ UI_RAW = [
     ('<div class="hint" id="hint">click to continue →</div>', '<div class="hint" id="hint">点击继续 →</div>'),
     ('<p class="rotate">Turn your phone sideways for a bigger stage. Swipe or tap to step.</p>',
      '<p class="rotate">把手机横过来，画面更大。滑动或点击逐步播放。</p>'),
-    ('<p class="keys"><kbd>→</kbd> or click: next step &nbsp;·&nbsp; <kbd>←</kbd> back &nbsp;·&nbsp; <kbd>P</kbd> play or pause &nbsp;·&nbsp; <kbd>M</kbd> sound on or off &nbsp;·&nbsp; <kbd>C</kbd> subtitles on or off &nbsp;·&nbsp; <kbd>F</kbd> full screen</p>',
-     '<p class="keys"><kbd>→</kbd> 或点击：下一步 &nbsp;·&nbsp; <kbd>←</kbd> 上一步 &nbsp;·&nbsp; <kbd>P</kbd> 播放或暂停 &nbsp;·&nbsp; <kbd>M</kbd> 声音开关 &nbsp;·&nbsp; <kbd>C</kbd> 字幕开关 &nbsp;·&nbsp; <kbd>F</kbd> 全屏</p>'),
+    ('<p class="keys"><kbd>→</kbd> or click: next sentence &nbsp;·&nbsp; <kbd>←</kbd> back &nbsp;·&nbsp; <kbd>P</kbd> play or pause &nbsp;·&nbsp; <kbd>M</kbd> sound on or off &nbsp;·&nbsp; <kbd>C</kbd> subtitles on or off &nbsp;·&nbsp; <kbd>F</kbd> full screen</p>',
+     '<p class="keys"><kbd>→</kbd> 或点击：下一句 &nbsp;·&nbsp; <kbd>←</kbd> 上一句 &nbsp;·&nbsp; <kbd>P</kbd> 播放或暂停 &nbsp;·&nbsp; <kbd>M</kbd> 声音开关 &nbsp;·&nbsp; <kbd>C</kbd> 字幕开关 &nbsp;·&nbsp; <kbd>F</kbd> 全屏</p>'),
     ('<summary>Read it as an article</summary>', '<summary>阅读文章版</summary>'),
     ('fetch("music.m4a")', 'fetch("../music.m4a")'),
     ('`PART ${n + 1} OF ${PARTS.length} · FROM ${PARTS[n][2].toUpperCase()}`', '`第 ${n + 1} 部分 / 共 ${PARTS.length} · 来自 ${PARTS[n][2]}`'),
@@ -47,7 +47,7 @@ UI_RAW = [
 ]
 UI_STRINGS = {
     "An animated story": "动画故事", "Play the story": "播放故事", "Play": "播放", "Pause": "暂停", "Replay": "重播",
-    "Next step": "下一步", "Previous step": "上一步", "Scenes": "场景", "Full screen": "全屏",
+    "Next sentence": "下一句", "Previous sentence": "上一句", "Scenes": "场景", "Full screen": "全屏",
     "Sound on": "声音开", "Sound off": "声音关", "Sound on: voice and music (M)": "声音开：配音和音乐（M）",
     "Sound off (M)": "声音关（M）", "Read it as an article": "阅读文章版",
 }

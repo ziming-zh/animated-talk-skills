@@ -87,8 +87,8 @@ Colors (`col`), each with a dark-mode value:
 ## 5. The player
 
 - **Navigation:**
-  - →, Space, Enter or a click: next step.
-  - ←: back.
+  - →, Space, Enter or a click: the next sentence. Inside a step's clip, the voice jumps to the start of the next subtitle line; after the last line, the next step.
+  - ←: back one sentence, then the previous step.
   - Home / End: first / last step.
   - `P`: play / pause.
   - `M`: sound.
@@ -97,8 +97,8 @@ Colors (`col`), each with a dark-mode value:
   - Clicking a segment of the rail jumps to that scene.
   - `#scene-id` in the URL opens that scene.
 - **Autoplay:** each step plays its clip, then waits 0.65 s (1.3 s at the end of a scene) and advances. With no voice, a step stays up 4.2–11.5 s, scaled to its text. The next clip is preloaded.
-- **Subtitles:** drawn on the stage and timed to the clip by length. The full narration also goes to a hidden live region for screen readers.
-- **Music:** `music.m4a` through WebAudio, only while autoplay runs with sound on. It dips under the voice.
+- **Subtitles:** drawn on the stage, one sentence (or half of a long one) at a time. Each line starts at a pause in the voice: the player decodes the clip, finds its pauses, and matches one pause to each line break, in order, preferring long pauses near the line's share of the text. Until the clip is decoded, the share of the text alone sets the times. Autoplay still advances by step. The full narration also goes to a hidden live region for screen readers.
+- **Music:** `music.m4a` through WebAudio, with sound on. It starts with the first voice clip, under autoplay or when stepping by hand, and dips while the voice speaks (volume 0.1, and 0.2 between clips). Stepping by hand, it fades out 9 s after the last clip.
 - **Preferences:** sound and subtitles on/off are kept in `localStorage`. With `prefers-reduced-motion`, steps appear without animation.
 - **Phones:** below 720 px the rail shows only the current act, and a hint suggests turning the phone sideways.
 
@@ -122,6 +122,7 @@ Keep the article in `article/en.json` and insert it with `scripts/make_article.p
 | `make_article.py --page talk/index.html --article article/en.json` | Puts the article into the page |
 | `make_zh.py --src talk/index.html --narr zh/narration.json --strings zh/strings.json --article article/zh.json` | Writes `talk/zh/index.html`; read its warnings |
 | `make_music.py --out talk/music.m4a` | A 64 s seamless ambient loop |
+| `levels.py talk/music.m4a talk/voice/start-0.m4a talk/zh/voice/start-0.m4a` | How far the music sits under the voice, and where its sound is |
 
 The TTS engines live in `~/.local/share/tts`. The scripts re-run themselves under the right venv:
 
@@ -131,7 +132,7 @@ The TTS engines live in `~/.local/share/tts`. The scripts re-run themselves unde
 | edge-tts | `edge-venv/` |
 | CosyVoice 2 | `cv-venv/` and `cosyvoice/`, with the model in `cv-models/CosyVoice2-0.5B` |
 
-macOS `afconvert` encodes the m4a files. Use `make_music.py` with the Kokoro venv, which has numpy.
+macOS `afconvert` encodes the m4a files. Use `make_music.py` and `levels.py` with the Kokoro venv, which has numpy.
 
 The usual order after an edit:
 

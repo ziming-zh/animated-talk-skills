@@ -19,7 +19,7 @@ Claude Code picks it up in new sessions. Ask it to turn a deck or an idea into a
 3. **Plan scenes and steps.** A scene holds one idea. A step is one sentence group of narration paired with one change in the picture.
 4. **Build the scenes.** Animate the mechanism rather than describing it. Use one main picture per scene, and put only labels and key numbers on screen.
 5. **Write the narration.** Keep it spoken and plain, so that every sentence carries the point. Connect each scene to the one before it.
-6. **Add the voice, subtitles and music.** Make one clip per step. Subtitles go on the picture. The music is an original loop that dips under the voice.
+6. **Add the voice, subtitles and music.** Make one clip per step. Subtitles go on the picture. The music is an original loop that dips under the voice; check with `levels.py` that it can still be heard.
 7. **Review, then play the whole thing through.** Use the checklists in `references/review.md`, and ask a reader's questions of every scene.
 8. **Write the article.** Write it separately from the narration, as a linear text. Each paragraph motivates its point first, then zooms in. Highlight the insights, add a few captioned stills, and end with three takeaways.
 9. **Make the Chinese version.** Rewrite it rather than translate it, and keep engineering terms in English.
@@ -41,7 +41,7 @@ Each correction from the author is treated as a pattern. Every similar sentence 
 | `references/review.md` | Checklists before showing anything |
 | `references/corrections.md` | The first talk's corrections, as before → after pairs |
 | `assets/template/index.html` | Starter page: engine, player, styles, three demo scenes, a sample article |
-| `scripts/` | `make_voice.py`, `make_article.py`, `make_zh.py`, `make_music.py` |
+| `scripts/` | `make_voice.py`, `make_article.py`, `make_zh.py`, `make_music.py`, `levels.py` |
 
 ## Requirements
 

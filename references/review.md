@@ -6,6 +6,7 @@ The author reviews by playing the whole talk and reading the whole article, so d
 
 - [ ] **The line reads straight through.** List each scene's title and the first sentence of its narration, and read the list in order. It should read as the argument, with no jumps.
 - [ ] **Nothing is used before it is defined**, whether a concept, a term or a component.
+- [ ] **An abstract premise comes with the experience behind it.** Before "when a design doesn't fit, the struggle shows", say what everyone has felt: when you write the code yourself, you feel whether the design fits.
 - [ ] **Every claim has its reason nearby.** When a reader would ask "why?", the answer comes within a sentence or two.
 - [ ] **Every turn names what breaks.** No bare "but", and no "here's the catch".
 - [ ] **The key insight is one sentence**, said plainly, and nothing next to it dilutes it.
@@ -45,6 +46,7 @@ The author reviews by playing the whole talk and reading the whole article, so d
 - [ ] **Each scene's first sentence connects to the last scene.** Structure is signposted, and examples are marked as examples.
 - [ ] **Read the subtitles in sequence.** Nothing appears abruptly.
 - [ ] **Each step is 1–4 sentences.**
+- [ ] **The music can be heard under the voice.** `levels.py` puts it about 15 dB(A) under the voice while it speaks, with most of its sound above 400 Hz. Step by hand once and check that the music starts.
 - [ ] **`make_voice.py` has been run** (and `--lang zh`). Clip count equals step count, and the changed scenes have been listened to.
 
 ## Article
@@ -70,6 +72,7 @@ The author reviews by playing the whole talk and reading the whole article, so d
 ## Before publishing
 
 - [ ] **The whole talk has been played through in the browser pane**, in both languages, with no console errors.
+- [ ] **It has been stepped through by hand too.** Next goes one sentence at a time, lands at the start of each sentence, and moves on to the next step after a clip's last sentence.
 - [ ] **The URL slug names the topic.**
 - [ ] **Only the talk's files and its sources are staged.** Nothing from others' uncommitted work, and no build files.
 - [ ] **The author has said to commit and push.**

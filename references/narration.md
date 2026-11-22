@@ -51,7 +51,13 @@ Render all clips of one language with one engine and voice. In the first talk, o
 
 ## 6. Music
 
-`make_music.py` synthesizes an original, calm, seamless ambient loop (pads, sparse bells, low bass, reverb), with no samples and no licensing question. The player plays it only during autoplay with sound on, at volume 0.15, and dips it to 0.06 while the voice speaks.
+`make_music.py` synthesizes an original, calm, seamless ambient loop (pads, sparse bells, low bass, reverb), with no samples and no licensing question.
+
+The player starts the music with the first voice clip, whether the talk plays itself or the reader steps through by hand. It plays at volume 0.2 between clips and dips to 0.1 while the voice speaks. When the reader steps by hand, it fades out about 9 s after the last clip ends.
+
+**The music must be heard on laptop speakers.** The first loop put almost all its sound below 400 Hz: low pads and a bass. Laptop speakers barely play below 150 Hz, and the voice covers 150–400 Hz. Under autoplay it sat about 22 dB(A) under the voice, and it never started when the reader stepped by hand. The author asked where the music was: "我们的轻背景音乐呢" (where's our light background music?).
+
+The fix kept the same chords and tune. The bells moved up an octave and got louder, an octave-up layer of the pad was added, and the pad and bass were turned down. Check every new loop with `scripts/levels.py`. Aim for about 15 dB(A) under the voice while it speaks and about 9 dB(A) between clips, with most of the sound above 400 Hz.
 
 ## 7. After every narration change
 
