@@ -14,7 +14,7 @@ Writes talk/zh/index.html. Three inputs, all kept next to the talk's sources:
                    "meta":    {"description": "...", "og:title": "...", "og:description": "..."}}
                   Stage text. Arrays are replaced first (multi-line labels), then single string literals.
                   Template literals and anything else go in raw. Code, file and function names, and terms
-                  an engineer reads as-is (agent, spec, cache, patch, workload, evict...) stay in English.
+                  an engineer reads as-is (cache, patch, workload, module...) stay in English.
   article zh.json The Chinese article, same format as the English one.
 
 The player's own interface (buttons, hints, language switch, fonts) is translated here.

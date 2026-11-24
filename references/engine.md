@@ -5,7 +5,7 @@ The whole talk is a single HTML file, with no build step and no framework:
 - a player with voice, subtitles, music, a scene rail and keyboard controls;
 - the article, kept as JSON inside the page.
 
-Start from `assets/template/index.html`. The first talk's page is the full worked example: `~/Desktop/ziming-zh.github.io/static/blog/agentic-research-system-design/index.html`, with 23 scenes.
+Start from `assets/template/index.html`.
 
 ## 1. Page layout
 
@@ -24,7 +24,7 @@ The build scripts find scenes by exactly this shape, so keep it:
 
 ```js
 scene({
-  id: "tangle", act: 4, title: "Agents file code by when it runs",
+  id: "retries", act: 2, title: "Retries double the load",
   steps: [
     "Narration for step 0.",
     "Narration for step 1."
@@ -148,7 +148,7 @@ Python heredocs with Chinese text can fail with "Non-UTF-8 code". Write such edi
 - Open it in the browser pane. Add `?v=N` to bust the cache after edits.
 - Step with the arrow keys and screenshot the steps that changed. Check the console for errors. Missing voice clips show up as 404s until `make_voice.py` runs.
 - Check the layout at phone width with `resize_window` preset `mobile`. Reset it to `desktop` afterwards.
-- **When the pane is hidden, CSS transitions and requestAnimationFrame freeze**, so screenshots show half-finished states. Before judging layout, inject a style that turns transitions off. **Reload the page when done:** the author watches the same pane. Once, they saw the leftover style and thought the animations had been removed.
+- **When the pane is hidden, CSS transitions and requestAnimationFrame freeze**, so screenshots show half-finished states. Before judging layout, inject a style that turns transitions off. **Reload the page when done:** the author watches the same pane, and a leftover style makes the animations look as if they had been removed.
 - Open the article and check every figure and caption.
 
 ## 9. Deploying (a Hugo site on GitHub Pages)

@@ -28,7 +28,6 @@ TTS = os.path.expanduser("~/.local/share/tts")
 # how a word on screen should be said; add the talk's own terms with --say
 SAY = [
     (r"\bv(\d)\b", r"version \1"),
-    (r"\bAGENTS?\.md\b", "agents dot M D"),
     (r"\bPhD\b", "P H D"),
     (r"\bGPU\b", "G P U"),
     (r"\bGCC\b", "G C C"),
@@ -36,7 +35,6 @@ SAY = [
 ]
 SAY_ZH = [
     (r"\bv(\d)\b", r"版本\1"),
-    (r"\bAGENTS?\.md\b", "agents 点 M D"),
     (r"\bGPU\b", "G P U"),
     (r"\bGCC\b", "G C C"),
     (r"(\d+)%", r"百分之\1"),

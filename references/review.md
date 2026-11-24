@@ -1,16 +1,16 @@
 # Checklists to run before showing the author anything
 
-The author reviews by playing the whole talk and reading the whole article, so do the same first. Each item below is something the first talk got wrong at least once.
+The author reviews by playing the whole talk and reading the whole article, so do the same first. Each item below catches one of the causes in `reasons.md`.
 
 ## Story
 
 - [ ] **The line reads straight through.** List each scene's title and the first sentence of its narration, and read the list in order. It should read as the argument, with no jumps.
 - [ ] **Nothing is used before it is defined**, whether a concept, a term or a component.
-- [ ] **An abstract premise comes with the experience behind it.** Before "when a design doesn't fit, the struggle shows", say what everyone has felt: when you write the code yourself, you feel whether the design fits.
+- [ ] **An abstract premise comes with the experience behind it.** Before the premise, say what the reader has felt that makes it true.
 - [ ] **Every claim has its reason nearby.** When a reader would ask "why?", the answer comes within a sentence or two.
 - [ ] **Every turn names what breaks.** No bare "but", and no "here's the catch".
 - [ ] **The key insight is one sentence**, said plainly, and nothing next to it dilutes it.
-- [ ] **The parallel parts are the same kind of thing**, all practices (or all of one kind), on the same dimension. Each comes from a known technique named professionally.
+- [ ] **The parallel parts are the same kind of thing**, on the same dimension. Each comes from a known technique named professionally.
 - [ ] **Every insight has its deeper reason** in the talk. None comes out of nowhere.
 - [ ] **One running example is used throughout.** No example needs the author's private context.
 - [ ] **On the stage, the right way is shown wherever the contrast is the point.**
@@ -35,7 +35,7 @@ The author reviews by playing the whole talk and reading the whole article, so d
 - [ ] **Each step changes what its narration names**, in the order the narration says it.
 - [ ] **Before/after pairs share a layout.**
 - [ ] **No text is hidden under the subtitles** (keep it above y ≈ 560). Nothing overlaps, no band is empty, and nothing is left over from an earlier step.
-- [ ] **Colors keep their meaning across scenes.** No "green" in any wording.
+- [ ] **Colors keep their meaning across scenes.** No color words used as jargon.
 - [ ] **It holds at phone width and in full screen.**
 - [ ] **A viewer would get each scene without the narration**, or at least wouldn't be misled by it. If it is too abstract, draw the concrete thing.
 
